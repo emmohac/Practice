@@ -1,5 +1,5 @@
-#ifndef LINKEDSTACK_HPP
-#define LINKEDSTACK_HPP
+#ifndef LINKEDQUEUE_HPP
+#define LINKEDQUEUE_HPP
 
 #include <iostream>
 
@@ -10,10 +10,10 @@ public:
     LinkedQueue();
     LinkedQueue(const LinkedQueue<T> &toCopy);
 
-    bool isEmpty() const;
-    int  size()    const;
+    bool isEmpty()  const;
+    int  size()     const;
     T&   peek()     const;
-
+    T&   back()     const;
     void enqueue(const T &e);
     T    pop();
     void clear();
@@ -40,4 +40,4 @@ private:
 
 };
 
-#endif // !LINKEDSTACK
+#endif // !LINKEDQUEUE
