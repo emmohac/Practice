@@ -1,4 +1,5 @@
 #include "LinkedQueue.hpp"
+#include <stdexcept>
 
 template<class T>
 LinkedQueue<T>::LinkedQueue(){
@@ -8,8 +9,21 @@ LinkedQueue<T>::LinkedQueue(){
 }
 
 template<class T>
-LinkedQueue<T>::LinkedQueue(const LinkedQueue<T> &toCopy){
+LinkedQueue<T>::~LinkedQueue(){}
 
+template<class T>
+LinkedQueue<T>::LinkedQueue(const LinkedQueue<T> &toCopy){
+    if (toCopy.first == nullptr){
+        first = last = nullptr;
+        count = 0;
+    }
+    else{
+        Node *current = toCopy.first;
+        while (current != nullptr){
+            enqueue(current->getValue());
+            current = current->getNext();
+        }
+    }
 }
 
 template<class T>
@@ -30,6 +44,12 @@ T& LinkedQueue<T>::peek() const {
 }
 
 template<class T>
+T& LinkedQueue<T>::back() const {
+    if (last == nullptr)
+        throw ("empty queue");
+    return last->getValue();
+}
+template<class T>
 void LinkedQueue<T>::enqueue(const T &e){
     if (first == nullptr)
         first = last = new Node(e);
@@ -44,13 +64,13 @@ void LinkedQueue<T>::enqueue(const T &e){
 template<class T>
 T LinkedQueue<T>::pop(){
     if (first == nullptr)
-        throw ("empty queue");
+        throw std::runtime_error("empty queue");
     Node *toDelete = first;
     T toReturn = first->getValue();
     if (first == last){
         delete toDelete;
         toDelete = nullptr;
-        last = first;
+        last = first = nullptr;
     }
     else{
         delete toDelete;
