@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#This program performs command chmox +x on the executable files
+#If there is no file listed, the program will print an error message and exit
+if [ -z "$1" ]; then
+	echo "cx: Too few argument."
+	exit 1
+else
+	chmod +x $@
+fi

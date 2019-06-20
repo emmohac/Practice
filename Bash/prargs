@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo "0: \""$0"\""
+if [ "$#" -ne 0 ]; then
+	var=1
+	for i;
+		do
+			echo "$var: \""$i"\""
+			var=`expr $var + 1`
+		done
+else
+	echo "prarg: Too few argument."
+fi

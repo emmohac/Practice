@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# declaring temporary file
+dirname="/tmp/thanos"
+c_name="$0"
+
+#check if directory is already existed
+if [ ! -d "$dirname" ]; then
+	mkdir /tmp/thanos
+
+fi
+
+trap "rm -rf $dirname; exit" 0 1 2 3 15
+gcc "$c_name.c" -o "$dirname/$c_name"
+"$dirname/$c_name"
+
+
+
+

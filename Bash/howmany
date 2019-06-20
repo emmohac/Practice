@@ -1,0 +1,8 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+	cd /home
+	ls -l | grep ugrad | wc -l
+else
+	echo "howmany: Too many arguments."
+fi

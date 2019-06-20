@@ -1,0 +1,29 @@
+#!/bin/bash
+t=""
+#checking if no option or filename is specified then the command acts normally as it should
+if [ "$#" -eq 0 ]; then
+	#ls -l | sort
+	ls -lS | sed '1d' | awk '{ print $1," ", $2, $3, "   ", $5, $6, $7, $8, $9}'
+else
+	#if there is argument, loop through all of them
+	for i in "$@"
+	do
+		#if the option include s, i or g or filename include invalid letter, exit gracefully
+		if [[ "$i" =~ ^-[sig] ]] || [[ "$i" =~ ^[@'!'+:()?'&'%$'#'\] ]]; then
+			echo "lss: invalid argument"
+			exit 0
+		#else if argument is an option, concate it to $t
+		elif [[ "$i" =~ ^-[AaBbCcDdFfGHhIkLlmnNopqQrRStTuUvwxX1] ]]; then
+			t="$i $t"
+		elif [[ -d "$i" ]]; then	
+			t="$i $t"	
+		elif [[ -f "$i" ]]; then
+			t="$i $t"
+		else
+			echo "lss: argument not accepted"
+			exit 0
+		fi
+	done
+	ls -lS $t
+fi
+

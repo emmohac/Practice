@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#This program counts the number of files in the current directory
+#If there are arguments listed, the program will print out an error message and exit
+if [ -z "$1" ]; then
+	ls -1a | wc -l
+else
+	echo "nf: Too many argument"
+	exit 1
+fi

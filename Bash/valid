@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#This program validates the format of a regular file or directory
+#If the file does not meet the file name qualification, the program
+#will print out an error message
+if [ "$#" -eq 1 ] && [[ "$1" =~ ^[A-Za-z._]\[a-zA-Z0-9_] ]]; then
+	echo "yes"	
+elif [ "$#" -eq 0 ]; then
+	echo "valid: Too few argument."
+	exit 1
+else
+	echo "no"
+	exit 1
+fi

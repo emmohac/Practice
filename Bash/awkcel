@@ -1,0 +1,46 @@
+#!/bin/bash
+
+if [ "$#" != 2 ]; then
+	echo "awkcel:: invalid number of argument"
+	exit 1
+fi
+file="$2"
+
+if [ ! -f "$file" ]; then
+	echo "File $file does not exist."
+	exit 1
+fi
+
+header=""
+script="$1"
+awkscript=""
+headerLine=0
+
+while read -r line
+do
+    headerLine=$((headerLine+1))
+	char=$(cut -c-1 <<< "$line")
+	if [ "$char" == "#" ];then
+		continue
+	fi
+	header=$line
+	read -a headerArray <<< $header
+    for i in "${headerArray[@]}"
+    do
+        #checking for valid file name
+        if [[ ! "$i" =~ ^[a-zA-Z0-9_] ]];then
+            echo "awkcel: column has invalid name"
+            exit 1
+        fi
+    done
+	awkscript='{'
+	for (( i=1; i<=${#headerArray[@]}; i++ )); do
+        awkscript+="${headerArray[$((i-1))]}=\$$i; "
+	done
+	awkscript+='}'
+    #echo "$awkscript"
+	break
+done < "$file"
+my_script="$awkscript {if (NR==$headerLine || /^#/) {next}}$script"
+#echo "$my_script"
+awk -F '\t' "$my_script" $file
