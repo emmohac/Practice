@@ -23,6 +23,13 @@ namespace gethelp {
 
     std::vector<int> WhatAreMyDuplicates(const std::vector<int> &v);
 
+    int indexOfPeak(const std::vector<int> &v);
+
+    int missingElement(const std::vector<int> &v);
+
+    std::vector<int> allMissingNumber(const std::vector<int> &v);
+
+    int majoriElement(const std::vector<int> &v);
 }
 
 

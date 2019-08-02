@@ -14,8 +14,7 @@ namespace gethelp {
     void sortReverse(std::vector<int> &v, bool reverse = false){
         if (!reverse)
             std::sort(v.begin(), v.end());
-        else
-        {
+        else {
             std::sort(v.begin(), v.end());
             std::stack<int> s;
             for (const int i : v)
@@ -77,5 +76,48 @@ namespace gethelp {
         return returnMe;
     }
 
+    int indexOfPeak(const std::vector<int> &v){
+        int len = v.size();
+        for (int i = 0 ; i < len - 1; ++i)
+            if (v[i] > v[i+1])      
+                return i;
+        return len - 1;             // Return the last index
+    }
 
+    int majorityElement(const std::vector<int> &v){
+        int toCompare = v.size() / 2;
+
+        std::unordered_map<int,int> m;
+        for (const int i : v)
+            m[i] += 1;
+
+        for (const auto &kv : m)
+            if (kv.second > toCompare)
+                return kv.first;
+        return 0;
+    }
+
+    int missingElement(const std::vector<int> &v){
+        int len = v.size();
+        int actualSum = 0,
+            trueSum = len * (len + 1) / 2;
+        
+        for (int e : v)
+            actualSum += e;
+        
+        return trueSum - actualSum;
+    }
+
+    std::vector<int> allMissingNumber(const std::vector<int> &v){
+        int len = v.size();
+        std::unordered_map<int,int> m;
+        for (const int i : v)
+            m[i] += 1;
+
+        std::vector<int> toReturn;
+        for(int i = 1; i <= len; ++i)
+            if (m.find(i) == m.cend())
+                toReturn.push_back(i);
+        return toReturn;
+    }
 }
