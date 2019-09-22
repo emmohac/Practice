@@ -1,61 +1,51 @@
 const Nightmare = require("nightmare")
 const cheerio = require("cheerio")
-
 const nightmare = Nightmare({
     show: true
 })
-const url = "https://www.flipkart.com/"
+const fs = require("fs")
+
+const item = process.argv.slice(2)
 nightmare
-    .goto(url)
-    .wait('body')
-    .click('button._2AkmmA._29YdH8')
-    .type('input.LM6RPg', 'nodejs books')
-    .click('button.vh79eN')
-    .wait('div.bhgxx2')
-    .evaluate(() => document.querySelector('body').innerHTML)
+    .goto("https://orangecounty.craigslist.org")
+    .type("input.querybox.flatinput.ui-autocomplete-input", item[0])
+    .wait(500)
+    .type("input.querybox.flatinput.ui-autocomplete-input", "\u000d")
+    .wait("div.content")
+    .evaluate(() => document.querySelector("body").innerHTML)
     .end()
     .then(response => {
-        console.log(getData(response));
-    }).catch(err => {
-        console.log(err);
-    });
+        let data = JSON.stringify(getData(response))
+        fs.writeFile("./data.json", data, "utf8", function (err) {
+            if (err) {
+                return console.log(err)
+            }
+        })
+        console.log("Data file saved")
+    })
+    .catch(error => {
+        console.error("Search failed", error)
+    })
 
-// Parsing data using cheerio
 let getData = html => {
-    data = [];
-    const $ = cheerio.load(html);
-    $('div._1HmYoV._35HD7C:nth-child(2) div.bhgxx2.col-12-12').each((row, raw_element) => {
-        $(raw_element).find('div div div').each((i, elem) => {
-            let title = $(elem).find('div div a:nth-child(2)').text();
-            let link = $(elem).find('div div a:nth-child(2)').attr('href');
+    data = []
+    const $ = cheerio.load(html)
+    $("ul.rows").each((row, raw_element) => {
+        $(raw_element).find("p").each((i, elem) => {
+            let title = $(elem).find("a.result-title.hdrlnk").text()
+            let price = $(elem).find("span.result-meta span.result-price").text()
             if (title) {
                 data.push({
                     title: title,
-                    link: link
-                });
+                    price: price
+                })
+            } else {
+                data.push({
+                    title: "nothing",
+                    price: 0
+                })
             }
-        });
-    });
-    return data;
+        })
+    })
+    return data
 }
-
-
-
-
-// nightmare.goto(url).wait("body").evaluate(() => document.querySelector("body").innerHTML).end().then(response => {
-// console.log(getData(response))
-// }).catch(error => {
-// console.log(error)
-// })
-
-// let getData = html => {
-//     data = []
-//     const $ = cheerio.load(html)
-//     $("table.itemlist tr td:nth-child(3)").each((i, elem) => {
-//         data.push({
-//             title: $(elem).text(),
-//             link: $(elem).find("a.storylink").attr("href")
-//         })
-//     })
-//     return data;
-// }
